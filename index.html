@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 추첨기</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #ff6f61;
+            margin-bottom: 20px;
+        }
+        .lotto-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .ball {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffda79, #ffd700);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #ff6f61;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e85b50;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 로또 추첨기 🎉</h1>
+    <div class="lotto-container" id="lotto-container">
+        <!-- 추첨 번호가 여기에 표시됩니다 -->
+    </div>
+    <button onclick="generateLotto()">로또 번호 생성</button>
+
+    <script>
+        function generateLotto() {
+            const lottoContainer = document.getElementById('lotto-container');
+            lottoContainer.innerHTML = ''; // 기존 번호 초기화
+
+            const numbers = [];
+            while (numbers.length < 6) {
+                const randomNum = Math.floor(Math.random() * 45) + 1; // 1 ~ 45 사이의 숫자
+                if (!numbers.includes(randomNum)) {
+                    numbers.push(randomNum);
+                }
+            }
+
+            numbers.sort((a, b) => a - b); // 오름차순 정렬
+
+            // 초기 화면에 빈 공 추가
+            const balls = [];
+            for (let i = 0; i < 6; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'ball';
+                ball.textContent = '🎲'; // 초기 값
+                lottoContainer.appendChild(ball);
+                balls.push(ball);
+            }
+
+            // 숫자를 순차적으로 탁탁 멈추는 효과
+            balls.forEach((ball, index) => {
+                let intervalId;
+                let currentNum = 1;
+
+                // 빠르게 숫자 변경
+                intervalId = setInterval(() => {
+                    currentNum = Math.floor(Math.random() * 45) + 1;
+                    ball.textContent = currentNum;
+                }, 50);
+
+                // 일정 시간 후 멈춤
+                setTimeout(() => {
+                    clearInterval(intervalId); // 숫자 변경 멈춤
+                    ball.textContent = numbers[index]; // 최종 숫자 설정
+                }, (index + 1) * 1000); // 공마다 1초씩 추가 딜레이
+            });
+        }
+    </script>
+</body>
+</html>
